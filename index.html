@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rainbow Entertainment — A unified, end-to-end powerhouse for cinematic creation. Film production, post-production, VFX, and creative services based in Mumbai.">
+  <title>Rainbow Entertainment — Cinematic Production Studio</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="static/style.css">
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- App Script -->
+  <script src="static/script.js" defer></script>
+</head>
+<body>
+
+
+
+
+  <!-- ============================================
+       HEADER / NAV
+       ============================================ -->
+  <header class="site-header" id="site-header">
+    <div class="site-logo">Rainbow</div>
+    <a href="gallery.html" class="btn-gallery" id="btn-gallery">Gallery</a>
+  </header>
+
+
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
+  <main id="main-content">
+
+    <!-- ====== HERO ====== -->
+    <section class="hero section" id="hero">
+      <!-- Background Video -->
+      <div class="hero-video-bg">
+        <video autoplay muted playsinline class="hero-video-bg-el">
+          <source src="media/mock-video.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-bg-gradient"></div>
+
+
+
+      <!-- <h1 class="hero-headline">
+        <span class="word"><span class="word-inner">We</span></span>
+        <span class="word"><span class="word-inner">Are</span></span>
+        <span class="word"><span class="word-inner accent">Rainbow</span></span>
+        <span class="word"><span class="word-inner accent">Entertainment.</span></span>
+      </h1> -->
+
+      <div class="scroll-indicator">
+        <span>Scroll to Explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+
+    <!-- ====== INTRODUCTION ====== -->
+    <section class="section section-intro" id="introduction">
+      <div class="container">
+        <div class="section-label">
+          <span>01 — Introduction</span>
+        </div>
+        <p class="intro-text">
+          <span class="line-wrap"><span class="line-inner">A unified, end-to-end powerhouse</span></span>
+          <span class="line-wrap"><span class="line-inner">for cinematic creation. Seamlessly</span></span>
+          <span class="line-wrap"><span class="line-inner">integrating pre-production, post-production,</span></span>
+          <span class="line-wrap"><span class="line-inner">and both indoor and outdoor shoots</span></span>
+          <span class="line-wrap"><span class="line-inner">under one roof.</span></span>
+        </p>
+      </div>
+    </section>
+
+
+    <!-- ====== VISION — V2 Cinematic Layout ====== -->
+    <section class="section vision" id="vision">
+
+      <!-- Section Label -->
+      <div class="vision-label-wrap">
+        <div class="section-label">
+          <span>02 — Our Vision</span>
+        </div>
+      </div>
+
+      <!-- Full-Bleed Image Banner with overlaid text -->
+      <div class="vision-image-banner" id="vision-banner">
+        <img src="media/caught-in-joy-poster.jpg" alt="Rainbow Entertainment Studio — Music Production Console">
+        <div class="vision-image-overlay"></div>
+        <div class="vision-image-text">
+          <h2>
+            <span class="rainbow-word">Democratizing</span><br>
+            Filmmaking.
+          </h2>
+        </div>
+      </div>
+
+      <!-- Content Panels -->
+      <div class="vision-content">
+        <div class="vision-panels">
+          <div class="vision-panel" id="vision-panel-1">
+            <div class="vision-panel-number">01</div>
+            <div class="vision-panel-accent-line"></div>
+            <h3>Accessible Production</h3>
+            <p>We deliver accessible, hassle-free cinematic production that respects both your timeline and your budget — without ever compromising on quality.</p>
+          </div>
+          <div class="vision-panel" id="vision-panel-2">
+            <div class="vision-panel-number">02</div>
+            <div class="vision-panel-accent-line"></div>
+            <h3>Creative Excellence</h3>
+            <p>Every project receives the same devotion to craft. From indie shorts to commercial campaigns, our pipeline is built for speed, precision, and visual brilliance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Strip -->
+      <div class="vision-strip">
+        <div class="vision-strip-img">
+          <img src="media/adi-goldstein.jpg" alt="Audio Mixing Console Close-up">
+        </div>
+        <div class="vision-strip-img">
+          <img src="media/caught-in-joy-poster.jpg" alt="Full Studio Setup">
+        </div>
+        <div class="vision-strip-img">
+          <img src="media/caught-in-joy.jpg" alt="Keyboard and Recording Equipment">
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====== CREATIVE SERVICES ====== -->
+    <section class="section section-services" id="services">
+      <div class="container">
+        <div class="section-label">
+          <span>03 — Services</span>
+        </div>
+
+        <h2 class="services-headline">Complete Audio‑Visual<br>Mastery.</h2>
+        <p class="services-subtitle">Our state-of-the-art studio is fully equipped with industry-leading tools and world-class talent to bring your vision to life.</p>
+
+        <div class="services-grid">
+          <div class="service-card" id="service-music">
+            <div class="service-index">01</div>
+            <h3 class="service-title">Music Production</h3>
+            <p class="service-desc">Full-scale music production from composition to final master, tailored for film, advertising, and digital media.</p>
+          </div>
+          <div class="service-card" id="service-scoring">
+            <div class="service-index">02</div>
+            <h3 class="service-title">Background Scoring</h3>
+            <p class="service-desc">Cinematic scores that breathe emotion into every frame. Custom compositions for narrative and documentary film.</p>
+          </div>
+          <div class="service-card" id="service-mixing">
+            <div class="service-index">03</div>
+            <h3 class="service-title">Mixing & Mastering</h3>
+            <p class="service-desc">Precision audio engineering delivering broadcast-ready mixes with depth, clarity, and dynamic range.</p>
+          </div>
+          <div class="service-card" id="service-editing">
+            <div class="service-index">04</div>
+            <h3 class="service-title">Advanced Video Editing</h3>
+            <p class="service-desc">Non-linear editing with seamless storytelling, pace, and rhythm — from rough cuts to final delivery.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====== RECENT WORKS ====== -->
+    <section class="section section-recent" id="recent-works">
+      <div class="container">
+        <div class="section-label">
+          <span>04 — Recent Works</span>
+        </div>
+
+        <div class="recent-header-flex">
+          <h2 class="services-headline">Cinematic<br>Portfolio.</h2>
+          <a href="gallery.html" class="btn-gallery">View Full Gallery</a>
+        </div>
+        
+        <div class="carousel-container">
+          <div class="carousel-track" id="recent-videos-track">
+            <!-- Videos injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ABOUT US ====== -->
+    <section class="section section-about" id="about">
+      <div class="container">
+        <div class="section-label">
+          <span>05 — About Us</span>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text-block">
+            <h3>Bridging Grand Visions &amp; Accessible Production</h3>
+            <p>Established in 2018 and based in Mumbai, Rainbow Entertainment bridges the gap between grand cinematic visions and accessible production. We understand that filmmaking can seem expensive and complex.</p>
+            <p>We are here to remove the barriers — providing elite technicians, top-tier locations, and industry expertise so you can execute your project economically and beautifully. From location hunting to casting, we handle the friction so you can focus on the story.</p>
+
+            <div class="about-stats">
+              <div class="stat-item">
+                <div class="stat-number">2018</div>
+                <div class="stat-label">Established</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Projects Delivered</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">Mumbai</div>
+                <div class="stat-label">Headquarters</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">End‑to‑End</div>
+                <div class="stat-label">Production Pipeline</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-image-stack">
+            <div class="about-img-wrap about-img-primary">
+              <img src="media/caught-in-joy.jpg" alt="Studio recording equipment — keyboard and microphone">
+              <div class="about-img-overlay"></div>
+              <span class="about-img-label">Studio Floor</span>
+            </div>
+            <div class="about-img-wrap about-img-secondary">
+              <img src="media/adi-goldstein.jpg" alt="Professional mixing console close-up">
+              <div class="about-img-overlay"></div>
+              <span class="about-img-label">Audio Engineering</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====== FOOTER / CONTACT ====== -->
+    <footer class="site-footer" id="contact">
+      <div class="container">
+        <div class="section-label">
+          <span>06 — Contact</span>
+        </div>
+
+        <h2 class="footer-cta">Let's Create<span class="cta-dot"></span></h2>
+
+        <div class="footer-bottom">
+          <div class="footer-col">
+            <h4>Get In Touch</h4>
+            <a href="mailto:hello@rainbowentertainment.in">hello@rainbowentertainment.in</a>
+            <a href="tel:+919876543210">+91 98765 43210</a>
+          </div>
+          <div class="footer-col">
+            <h4>Location</h4>
+            <p>Mumbai, Maharashtra<br>India</p>
+          </div>
+          <div class="footer-col">
+            <h4>Follow Us</h4>
+            <a href="#">Instagram</a>
+            <a href="#">YouTube</a>
+            <a href="#">LinkedIn</a>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="#">Showreel</a>
+            <a href="#">Careers</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+
+        <p class="footer-copyright">&copy; 2024 Rainbow Entertainment. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>
