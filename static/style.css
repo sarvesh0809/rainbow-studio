@@ -797,10 +797,16 @@ img, video { display: block; max-width: 100%; }
   overflow: hidden;
 }
 
-.video-thumbnail-wrap video {
+.video-thumbnail-wrap video, .video-thumbnail-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.video-thumbnail-wrap video {
   opacity: 0.7;
   transition: opacity 0.4s;
 }
@@ -985,7 +991,7 @@ img, video { display: block; max-width: 100%; }
   .section-recent { padding-bottom: 40px; }
   .recent-header-flex { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
   .services-headline, .footer-cta { text-align: left; hyphens: auto; word-break: break-word; }
-  .vision-image-text h2 { text-align: left; font-size: clamp(1.4rem, 8vw, 2.5rem); word-break: break-word; }
+  .vision-image-text h2 { text-align: left; font-size: clamp(1.2rem, 7vw, 2.5rem); word-break: normal; hyphens: none; }
   .video-card { width: 85vw; min-width: 250px; }
   .gallery-grid { grid-template-columns: 1fr; }
   .gallery-grid .video-card { width: 100%; }
