@@ -103,10 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       card.innerHTML = `
         <div class="video-thumbnail-wrap" style="pointer-events: auto;">
-          ${isMock 
-            ? `<video muted loop playsinline poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause()"><source src="${item.videoUrl}" type="video/mp4"></video><div class="play-icon"></div>`
-            : `<iframe src="${iframeSrc}" width="100%" height="100%" style="border: none; border-radius: 8px 8px 0 0;" allowfullscreen></iframe>`
-          }
+          <video class="gallery-video-player" muted loop playsinline poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause()" style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="${isMock ? item.videoUrl : `https://drive.google.com/uc?export=download&id=${item.id}`}" type="video/mp4">
+          </video>
+          <div class="play-icon"></div>
         </div>
         <div class="video-info">
           <div class="video-title">${item.title.replace(/\.[^/.]+$/, "")}</div>
@@ -115,16 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      if (isMock) {
-        card.addEventListener('click', () => {
-          const vid = card.querySelector('video');
-          if (vid && vid.requestFullscreen) {
-            vid.requestFullscreen();
+      card.addEventListener('click', () => {
+        const vid = card.querySelector('video');
+        const icon = card.querySelector('.play-icon');
+        if (vid) {
+          if (vid.paused) {
+            // Play inline with native controls
             vid.muted = false;
-            vid.play();
+            vid.controls = true;
+            if (icon) icon.style.opacity = '0';
+            vid.play().catch(e => console.log("Playback failed:", e));
+          } else {
+            vid.pause();
+            vid.controls = false;
+            if (icon) icon.style.opacity = '1';
           }
-        });
-      }
+        }
+      });
 
       grid.appendChild(card);
     });

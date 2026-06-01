@@ -317,10 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       card.innerHTML = `
         <div class="video-thumbnail-wrap">
-          ${isMock 
-            ? `<video muted loop playsinline poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause()"><source src="${item.videoUrl}" type="video/mp4"></video>` 
-            : `<iframe src="${iframeSrc}" width="100%" height="100%" style="border: none; pointer-events: none;"></iframe>`
-          }
+          <video class="recent-video-player" muted loop playsinline poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause()" style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="${isMock ? item.videoUrl : `https://drive.google.com/uc?export=download&id=${item.id}`}" type="video/mp4">
+          </video>
           <div class="play-icon"></div>
         </div>
         <div class="video-info">
