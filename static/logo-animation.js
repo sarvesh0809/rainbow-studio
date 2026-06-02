@@ -146,13 +146,26 @@
   function drawRainbow(progress, t) {
     if (progress <= 0) return;
 
-    const cx = W * 0.5;
-    const cy = H * 0.56; // Moved down from 0.52
-    const baseR = Math.min(W, H) * 0.38;
-    const totalBandWidth = Math.min(W, H) * 0.18;
+    const isMobile = W < 768;
+    
+    // Ensure the rainbow diameter doesn't exceed screen width
+    const maxRadius = W * 0.48;
+    let baseR = Math.min(W, H) * 0.38;
+    let totalBandWidth = Math.min(W, H) * 0.18;
+    
+    if (baseR + totalBandWidth > maxRadius) {
+      const scale = maxRadius / (baseR + totalBandWidth);
+      baseR *= scale;
+      totalBandWidth *= scale;
+    }
+
+    const perspMin = 0.3; // Left small, right big — preserved
+    const rainbowCenterOffset = (totalBandWidth * (1.0 - perspMin)) * 0.5;
+    const cx = W * 0.5 - rainbowCenterOffset; // Perfectly center the physical bounds
+    const cy = H * 0.56; // Reverted to 0.56
+
     const startA = Math.PI;
     const sweepA = Math.PI * Math.min(progress, 1);
-    const perspMin = 0.3; // Left small, right big — preserved
     const arcSegs = 100;
     const bands = SPECTRUM.length;
 
@@ -295,8 +308,11 @@
   function drawText(alpha, t) {
     if (alpha <= 0.01) return;
 
-    const textY = H * 0.63; // Moved up from 0.68 to close the gap
-    const fontSize = Math.max(Math.min(W * 0.055, 64), 22);
+    const isMobile = W < 768;
+    const fontSize = isMobile ? Math.max(W * 0.055, 16) : Math.max(Math.min(W * 0.055, 64), 22);
+
+    const cy = H * 0.56;
+    const textY = H * 0.63; // Reverted to 0.63
     const text = 'Rainbow Entertainment';
 
     ctx.save();
@@ -309,7 +325,8 @@
 
     for (let i = 0; i < text.length; i++) {
       const isSpace = text[i] === ' ';
-      const cw = ctx.measureText(text[i]).width + (isSpace ? tracking * 1.5 : tracking);
+      // Hardcode space width to prevent overlapping bugs on some devices
+      const cw = isSpace ? fontSize * 0.4 : ctx.measureText(text[i]).width + tracking;
       charWidths.push(cw);
       actualTotalWidth += cw;
     }
@@ -317,10 +334,8 @@
 
     ctx.textAlign = 'left';
 
-    const totalBandWidth = Math.min(W, H) * 0.18;
-    const perspMin = 0.3;
-    const rainbowCenterOffset = (totalBandWidth * (1.0 - perspMin)) * 0.5;
-    const textCenterX = W * 0.5 + rainbowCenterOffset;
+    // The rainbow's bounding box is now perfectly centered, so text can be simply centered at W * 0.5.
+    const textCenterX = W * 0.5;
 
     let xPos = textCenterX - actualTotalWidth * 0.5;
     for (let i = 0; i < text.length; i++) {

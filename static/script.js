@@ -317,10 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       card.innerHTML = `
         <div class="video-thumbnail-wrap">
-          <video class="recent-video-player" muted loop playsinline poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause()" style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="${isMock ? item.videoUrl : `https://drive.google.com/uc?export=download&id=${item.id}`}" type="video/mp4">
-          </video>
-          <div class="play-icon"></div>
+          ${isMock 
+            ? `<video class="recent-video-player" muted loop playsinline poster="${thumb}" style="width: 100%; height: 100%; object-fit: cover;">
+                 <source src="${item.videoUrl}" type="video/mp4">
+               </video>
+               <div class="play-icon"></div>`
+            : `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" style="width: 100%; height: 100%; border: none; border-radius: var(--clay-radius);"></iframe>`
+          }
         </div>
         <div class="video-info">
           <div class="video-title">${item.title.replace(/\.[^/.]+$/, "")}</div>
@@ -328,10 +331,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="video-date">${new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
         </div>
       `;
-      // Click goes to gallery
-      card.addEventListener('click', () => {
-        window.location.href = 'gallery.html';
-      });
+      // For mock videos, play on click
+      if (isMock) {
+        card.addEventListener('click', () => {
+          const vid = card.querySelector('video');
+          const icon = card.querySelector('.play-icon');
+          if (vid && vid.paused) {
+            vid.muted = false;
+            vid.controls = true;
+            if (icon) icon.style.display = 'none';
+            vid.play().catch(e => console.log("Playback failed:", e));
+          }
+        });
+      }
       track.appendChild(card);
     });
 
