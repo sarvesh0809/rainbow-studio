@@ -830,6 +830,28 @@ img, video { display: block; max-width: 100%; }
   border: none;
 }
 
+/* Fix for Google Drive iframe player minimum width overflow on mobile */
+.gdrive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--clay-radius);
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .gdrive-iframe {
+    width: 150% !important;
+    height: 150% !important;
+    transform: scale(0.666667);
+    transform-origin: top left;
+    border-radius: calc(var(--clay-radius) * 1.5);
+  }
+}
+
 .video-card:hover .video-thumbnail-wrap video {
   opacity: 1;
 }

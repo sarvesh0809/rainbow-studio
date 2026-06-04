@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  <source src="${item.videoUrl}" type="video/mp4">
                </video>
                <div class="play-icon"></div>`
-            : `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" style="width: 100%; height: 100%; border: none; border-radius: var(--clay-radius); overflow: hidden;"></iframe>`
+            : `<iframe class="gdrive-iframe" src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen scrolling="no"></iframe>`
           }
         </div>
         <div class="video-info">
