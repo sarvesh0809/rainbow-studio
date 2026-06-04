@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                <div class="play-icon"></div>`;
       } else if (isMobile) {
         playerHTML = `<a href="${viewUrl}" target="_blank" rel="noopener" class="mobile-video-link">
-                 <img src="${driveThumb}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                 <img src="${thumb}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
                  <div class="play-icon mobile-play-icon" style="opacity: 1; transform: translate(-50%, -50%) scale(1);"></div>
                </a>`;
       } else {
