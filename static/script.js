@@ -306,6 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     // Render cards
     videoData.forEach(item => {
       const card = document.createElement('div');
@@ -313,17 +315,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const isMock = item.id.startsWith("mock");
       const iframeSrc = isMock ? "" : `https://drive.google.com/file/d/${item.id}/preview`;
+      const viewUrl = `https://drive.google.com/file/d/${item.id}/view`;
+      const driveThumb = `https://drive.google.com/thumbnail?id=${item.id}&sz=w600`;
       const thumb = item.thumbnail ? item.thumbnail : "media/adi-goldstein.jpg";
+
+      // On mobile, use a clickable thumbnail instead of iframe
+      let playerHTML;
+      if (isMock) {
+        playerHTML = `<video class="recent-video-player" muted loop playsinline poster="${thumb}" style="width: 100%; height: 100%; object-fit: cover;">
+                 <source src="${item.videoUrl}" type="video/mp4">
+               </video>
+               <div class="play-icon"></div>`;
+      } else if (isMobile) {
+        playerHTML = `<a href="${viewUrl}" target="_blank" rel="noopener" class="mobile-video-link">
+                 <img src="${driveThumb}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                 <div class="play-icon mobile-play-icon" style="opacity: 1; transform: translate(-50%, -50%) scale(1);"></div>
+               </a>`;
+      } else {
+        playerHTML = `<iframe class="gdrive-iframe" src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen scrolling="no"></iframe>`;
+      }
 
       card.innerHTML = `
         <div class="video-thumbnail-wrap">
-          ${isMock 
-            ? `<video class="recent-video-player" muted loop playsinline poster="${thumb}" style="width: 100%; height: 100%; object-fit: cover;">
-                 <source src="${item.videoUrl}" type="video/mp4">
-               </video>
-               <div class="play-icon"></div>`
-            : `<iframe class="gdrive-iframe" src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen scrolling="no"></iframe>`
-          }
+          ${playerHTML}
         </div>
         <div class="video-info">
           <div class="video-title">${item.title.replace(/\.[^/.]+$/, "")}</div>

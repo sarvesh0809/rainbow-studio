@@ -889,6 +889,18 @@ img, video { display: block; max-width: 100%; }
   transform: translate(-50%, -50%) scale(1);
 }
 
+.mobile-play-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.mobile-video-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .video-info {
   padding: 24px;
 }
