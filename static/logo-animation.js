@@ -47,16 +47,28 @@
       if (a < 0.03) continue;
       const px = s.x * W, py = s.y * H;
       ctx.globalAlpha = a;
-      ctx.fillStyle = '#fff';
+      const g = ctx.createRadialGradient(px, py, 0, px, py, s.r * 2);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.2, 'rgba(200,220,255,0.8)');
+      g.addColorStop(1, 'rgba(200,220,255,0)');
+      ctx.fillStyle = g;
+      
+      ctx.globalCompositeOperation = 'lighter';
       ctx.beginPath();
-      ctx.arc(px, py, s.r, 0, 6.28);
+      ctx.arc(px, py, s.r * 2, 0, 6.28);
       ctx.fill();
+      
       if (s.bright > 0.85 && a > 0.45) {
-        ctx.globalAlpha = a * 0.3;
+        ctx.globalAlpha = a * 0.4;
+        const g2 = ctx.createRadialGradient(px, py, 0, px, py, s.r * 6);
+        g2.addColorStop(0, 'rgba(150,180,255,0.8)');
+        g2.addColorStop(1, 'rgba(150,180,255,0)');
+        ctx.fillStyle = g2;
         ctx.beginPath();
-        ctx.arc(px, py, s.r * 3, 0, 6.28);
+        ctx.arc(px, py, s.r * 6, 0, 6.28);
         ctx.fill();
       }
+      ctx.globalCompositeOperation = 'source-over';
     }
     ctx.globalAlpha = 1;
   }
@@ -64,22 +76,29 @@
   // --- CLOUDS ---
   const cloudCanvas = document.createElement('canvas');
   function initCloudTexture() {
-    cloudCanvas.width = 256;
-    cloudCanvas.height = 128;
+    cloudCanvas.width = 512;
+    cloudCanvas.height = 256;
     const c = cloudCanvas.getContext('2d');
-    const puffs = [
-      {x:80,y:70,r:40},{x:128,y:55,r:55},{x:180,y:75,r:35},
-      {x:100,y:90,r:30},{x:150,y:85,r:35},{x:60,y:90,r:25},{x:200,y:85,r:25}
-    ];
-    for (const p of puffs) {
-      const g = c.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
-      g.addColorStop(0,'rgba(200,205,220,1)');
-      g.addColorStop(0.5,'rgba(200,205,220,0.6)');
-      g.addColorStop(1,'rgba(200,205,220,0)');
+    
+    // Ethereal atmospheric fog/mist instead of cartoon puffs
+    for(let i = 0; i < 5; i++) {
+      const cx = 256 + (Math.random() - 0.5) * 100;
+      const cy = 128 + (Math.random() - 0.5) * 40;
+      const rx = 180 + Math.random() * 120; // Wide and stretched
+      const ry = 40 + Math.random() * 40;  // Thin vertically
+      
+      c.save();
+      c.translate(cx, cy);
+      c.scale(rx, ry);
+      const g = c.createRadialGradient(0, 0, 0, 0, 0, 1);
+      g.addColorStop(0, 'rgba(140, 150, 190, 0.25)');
+      g.addColorStop(0.4, 'rgba(140, 150, 190, 0.1)');
+      g.addColorStop(1, 'rgba(140, 150, 190, 0)');
       c.fillStyle = g;
       c.beginPath();
-      c.arc(p.x,p.y,p.r,0,6.28);
+      c.arc(0, 0, 1, 0, 6.28);
       c.fill();
+      c.restore();
     }
   }
   initCloudTexture();
