@@ -101,9 +101,14 @@
     for (let i = 0; i < clouds.length; i++) {
       const c = clouds[i];
       const cx = ((c.x + c.speed * t) % 1.5 - 0.25) * W;
+      
+      const isMobile = W < 768;
+      const mScale = isMobile ? c.scale * 0.5 : c.scale;
+      const mY = isMobile ? c.y * H + (i * 20) : c.y * H;
+      
       ctx.save();
-      ctx.translate(cx, c.y * H);
-      ctx.scale(c.scale, c.scale);
+      ctx.translate(cx, mY);
+      ctx.scale(mScale, mScale);
       ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
       ctx.shadowBlur = 20;
       ctx.shadowOffsetY = 0;
@@ -169,8 +174,9 @@
     }
 
     const perspMin = 0.3; // Left small, right big — preserved
+    // Shift the arc's geometrical center slightly LEFT to perfectly center its physical bounding box on the screen
     const rainbowCenterOffset = (totalBandWidth * (1.0 - perspMin)) * 0.5;
-    const cx = W * 0.5 - rainbowCenterOffset; // Perfectly center the physical bounds
+    const cx = W * 0.5 - rainbowCenterOffset;
     const cy = H * 0.56; // Reverted to 0.56
 
     const startA = Math.PI;
@@ -364,7 +370,7 @@
 
     ctx.textAlign = 'left';
 
-    // The rainbow's bounding box is now perfectly centered, so text can be simply centered at W * 0.5.
+    // Perfectly center the text on the screen, matching the rainbow's centered bounding box
     const textCenterX = W * 0.5;
 
     let xPos = textCenterX - actualTotalWidth * 0.5;

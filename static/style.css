@@ -267,7 +267,7 @@ img, video { display: block; max-width: 100%; }
 /* --- Section Base --- */
 .section {
   position: relative;
-  padding: 160px 48px;
+  padding: 80px 48px;
   overflow: hidden;
 }
 
@@ -684,7 +684,7 @@ img, video { display: block; max-width: 100%; }
 /* --- Footer --- */
 .site-footer {
   position: relative;
-  padding: 160px 48px 48px;
+  padding: 80px 48px 48px;
   overflow: hidden;
   background: var(--bg-secondary);
 }
