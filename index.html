@@ -252,24 +252,24 @@
           </div>
 
           <!-- ====== WEB3FORMS CONTACT ====== -->
-          <div class="contact-form-wrapper" style="flex: 1; min-width: 300px; max-width: 550px; width: 100%; padding: 48px; background: #252545; border: none; border-radius: 24px; text-align: left; box-shadow: 8px 8px 20px rgba(0,0,0,0.45), -4px -4px 12px rgba(60,60,100,0.12), inset 1px 1px 2px rgba(255,255,255,0.06); margin: 0;">
+          <div class="contact-form-wrapper" style="flex: 1; min-width: 300px; max-width: 550px; width: 100%; padding: 48px; background: var(--bg-card); border: none; border-radius: 24px; text-align: left; box-shadow: var(--clay-shadow); margin: 0;">
             <form action="https://api.web3forms.com/submit" method="POST" class="web3-contact-form" id="contact-form">
               <!-- Replace with your Access Key -->
               <input type="hidden" name="access_key" value="3ce82b30-315a-4b70-adaa-c038df00de86">
               
               <div class="form-group" style="margin-bottom: 24px;">
                 <label for="name" style="display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Name</label>
-                <input type="text" name="name" id="name" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.2); border: none; color: var(--text-light); border-radius: 16px; box-shadow: inset 4px 4px 10px rgba(0,0,0,0.35), inset -2px -2px 8px rgba(60,60,100,0.1); font-family: inherit; font-size: 1rem; outline: none; transition: box-shadow 0.3s ease;">
+                <input type="text" name="name" id="name" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.05); border: none; color: var(--text-primary); border-radius: 16px; box-shadow: var(--clay-shadow-inset); font-family: inherit; font-size: 1rem; outline: none; transition: box-shadow 0.3s ease;">
               </div>
               
               <div class="form-group" style="margin-bottom: 24px;">
                 <label for="email" style="display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Email</label>
-                <input type="email" name="email" id="email" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.2); border: none; color: var(--text-light); border-radius: 16px; box-shadow: inset 4px 4px 10px rgba(0,0,0,0.35), inset -2px -2px 8px rgba(60,60,100,0.1); font-family: inherit; font-size: 1rem; outline: none; transition: box-shadow 0.3s ease;">
+                <input type="email" name="email" id="email" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.05); border: none; color: var(--text-primary); border-radius: 16px; box-shadow: var(--clay-shadow-inset); font-family: inherit; font-size: 1rem; outline: none; transition: box-shadow 0.3s ease;">
               </div>
 
               <div class="form-group" style="margin-bottom: 32px;">
                 <label for="message" style="display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Message</label>
-                <textarea name="message" id="message" rows="4" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.2); border: none; color: var(--text-light); border-radius: 16px; box-shadow: inset 4px 4px 10px rgba(0,0,0,0.35), inset -2px -2px 8px rgba(60,60,100,0.1); font-family: inherit; font-size: 1rem; outline: none; resize: vertical; transition: box-shadow 0.3s ease;"></textarea>
+                <textarea name="message" id="message" rows="4" required style="width: 100%; padding: 16px; background: rgba(0,0,0,0.05); border: none; color: var(--text-primary); border-radius: 16px; box-shadow: var(--clay-shadow-inset); font-family: inherit; font-size: 1rem; outline: none; resize: vertical; transition: box-shadow 0.3s ease;"></textarea>
               </div>
               
               <button type="submit" class="btn-gallery" id="form-submit-btn" style="cursor: pointer; border: none; font-size: 1rem; width: 100%;">Send Message</button>

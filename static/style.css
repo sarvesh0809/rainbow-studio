@@ -8,16 +8,16 @@
 
 /* --- CSS Custom Properties --- */
 :root {
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16162a;
-  --bg-elevated: #222240;
-  --bg-card: #252545;
-  --bg-warm: #1e1e35;
-  --text-primary: #eeeef5;
-  --text-secondary: #a0a0c0;
-  --text-muted: #6a6a90;
-  --accent-glow: rgba(255, 255, 255, 0.06);
-  --border-subtle: rgba(255, 255, 255, 0.06);
+  --bg-primary: #DDE1E6;
+  --bg-secondary: #DDE1E6;
+  --bg-elevated: #D5D9E0;
+  --bg-card: #D5D9E0;
+  --bg-warm: #DDE1E6;
+  --text-primary: #1D1D1F;
+  --text-secondary: #515154;
+  --text-muted: #86868B;
+  --accent-glow: rgba(0, 0, 0, 0.03);
+  --border-subtle: rgba(0, 0, 0, 0.04);
   --rainbow-1: #ff2d55;
   --rainbow-2: #ff9500;
   --rainbow-3: #ffcc00;
@@ -32,9 +32,10 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --clay-radius: 24px;
   --clay-radius-sm: 16px;
-  --clay-shadow: 8px 8px 20px rgba(0,0,0,0.45), -4px -4px 12px rgba(60,60,100,0.12), inset 1px 1px 2px rgba(255,255,255,0.06);
-  --clay-shadow-hover: 10px 10px 28px rgba(0,0,0,0.55), -5px -5px 16px rgba(80,80,130,0.15), inset 1px 1px 3px rgba(255,255,255,0.08);
-  --clay-shadow-inset: inset 4px 4px 10px rgba(0,0,0,0.35), inset -2px -2px 8px rgba(60,60,100,0.1);
+  --clay-shadow: 8px 8px 24px rgba(20, 25, 30, 0.25), -6px -6px 16px rgba(255, 255, 255, 0.6), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+  --clay-shadow-hover: 12px 12px 32px rgba(20, 25, 30, 0.35), -8px -8px 20px rgba(255, 255, 255, 0.7), inset 1px 1px 3px rgba(255, 255, 255, 0.3);
+  --clay-shadow-inset: inset 6px 6px 12px rgba(20, 25, 30, 0.25), inset -4px -4px 8px rgba(255, 255, 255, 0.6);
+  --clay-text-shadow: 4px 4px 10px rgba(20, 25, 30, 0.35), -3px -3px 6px rgba(255, 255, 255, 0.7);
 }
 
 /* --- Reset & Base --- */
@@ -60,6 +61,11 @@ body {
   line-height: 1.6;
 }
 
+h1, h2, h3:not(.service-title), .hero-headline, .services-headline, .footer-cta {
+  color: #777d86;
+  text-shadow: var(--clay-text-shadow);
+}
+
 
 
 ::-webkit-scrollbar { width: 6px; }
@@ -82,7 +88,6 @@ img, video { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  mix-blend-mode: difference;
 }
 
 .site-logo {
@@ -91,7 +96,7 @@ img, video { display: block; max-width: 100%; }
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .btn-gallery {
@@ -101,7 +106,7 @@ img, video { display: block; max-width: 100%; }
   font-weight: 700;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-primary);
   background: var(--bg-card);
   border: none;
   padding: 14px 34px;
@@ -143,7 +148,7 @@ img, video { display: block; max-width: 100%; }
   justify-content: center;
   padding: 120px 48px 80px;
   overflow: hidden;
-  background: #1a1a2e;
+  background: var(--bg-primary);
 }
 
 .hero-video-bg {
@@ -153,7 +158,7 @@ img, video { display: block; max-width: 100%; }
   height: 100%;
   z-index: 0;
   overflow: hidden;
-  background: #1a1a2e;
+  background: var(--bg-primary);
 }
 
 .hero-video-bg-el {
@@ -237,7 +242,7 @@ img, video { display: block; max-width: 100%; }
 .scroll-line {
   width: 1px;
   height: 48px;
-  background: rgba(255,255,255,0.15);
+  background: rgba(26,32,44,0.15);
   position: relative;
   overflow: hidden;
 }
@@ -349,10 +354,7 @@ img, video { display: block; max-width: 100%; }
 .vision-image-overlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(to bottom, var(--bg-secondary) 0%, transparent 25%),
-    linear-gradient(to top, var(--bg-secondary) 0%, transparent 30%),
-    linear-gradient(135deg, rgba(191,90,242,0.08) 0%, transparent 50%, rgba(10,132,255,0.08) 100%);
+  background: transparent;
   pointer-events: none;
 }
 
@@ -404,7 +406,7 @@ img, video { display: block; max-width: 100%; }
   font-size: 5rem;
   font-weight: 700;
   line-height: 1;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(26,32,44,0.1) 0%, transparent 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -469,7 +471,7 @@ img, video { display: block; max-width: 100%; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(26,26,46,0.4) 0%, transparent 60%);
+  background: transparent;
   pointer-events: none;
 }
 
@@ -663,7 +665,7 @@ img, video { display: block; max-width: 100%; }
 .about-img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(26,26,46,0.5) 0%, transparent 50%);
+  background: linear-gradient(to top, rgba(230,233,237,0.8) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -675,7 +677,7 @@ img, video { display: block; max-width: 100%; }
   font-size: 0.55rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
+  color: rgba(26,32,44,0.6);
   z-index: 2;
 }
 
@@ -684,7 +686,7 @@ img, video { display: block; max-width: 100%; }
   position: relative;
   padding: 160px 48px 48px;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--bg-primary) 0%, #12122a 100%);
+  background: var(--bg-secondary);
 }
 
 .footer-cta {
@@ -863,10 +865,10 @@ img, video { display: block; max-width: 100%; }
   transform: translate(-50%, -50%) scale(0.8);
   width: 50px;
   height: 50px;
-  background: rgba(30,30,50,0.7);
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  box-shadow: 4px 4px 12px rgba(0,0,0,0.4), -2px -2px 8px rgba(60,60,100,0.15), inset 1px 1px 2px rgba(255,255,255,0.1);
+  box-shadow: 4px 4px 12px rgba(20,25,30,0.25), -2px -2px 8px rgba(255,255,255,0.6), inset 1px 1px 2px rgba(255,255,255,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -880,7 +882,7 @@ img, video { display: block; max-width: 100%; }
   height: 0; 
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-left: 12px solid #fff;
+  border-left: 12px solid #1D1D1F;
   margin-left: 4px;
 }
 
@@ -966,7 +968,7 @@ img, video { display: block; max-width: 100%; }
 
 .gallery-search input {
   width: 100%;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.05);
   border: none;
   color: var(--text-primary);
   padding: 12px 16px;

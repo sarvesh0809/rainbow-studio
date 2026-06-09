@@ -28,104 +28,94 @@
   const stars = [];
   function initStars() {
     stars.length = 0;
-    for (let i = 0; i < 100; i++) {
-      stars.push({
-        x: Math.random(), y: Math.random() * 0.85,
-        r: Math.random() * 1.3 + 0.5,
-        phase: Math.random() * 6.28,
-        speed: Math.random() * 2.5 + 0.8,
-        bright: Math.random() * 0.5 + 0.5
-      });
+    stars.push({ x: 0.35, y: 0.45, r: 10, rot: 0.2, col: '#ff2d55' });
+    stars.push({ x: 0.65, y: 0.40, r: 8, rot: -0.3, col: '#0a84ff' });
+    stars.push({ x: 0.70, y: 0.65, r: 12, rot: 0.5, col: '#ffcc00' });
+    stars.push({ x: 0.30, y: 0.70, r: 9, rot: -0.1, col: '#30d158' });
+  }
+
+  function drawStarShape(c, x, y, spikes, outerR, innerR) {
+    let rot = Math.PI / 2 * 3;
+    let step = Math.PI / spikes;
+    c.beginPath();
+    c.moveTo(x, y - outerR);
+    for (let i = 0; i < spikes; i++) {
+      let x1 = x + Math.cos(rot) * outerR;
+      let y1 = y + Math.sin(rot) * outerR;
+      c.lineTo(x1, y1);
+      rot += step;
+      x1 = x + Math.cos(rot) * innerR;
+      y1 = y + Math.sin(rot) * innerR;
+      c.lineTo(x1, y1);
+      rot += step;
     }
+    c.lineTo(x, y - outerR);
+    c.closePath();
   }
 
   function drawStars(t, alpha) {
     if (alpha <= 0) return;
+    ctx.globalAlpha = alpha;
     for (let i = 0; i < stars.length; i++) {
       const s = stars[i];
-      const a = alpha * s.bright * (0.4 + 0.6 * Math.sin(t * s.speed + s.phase));
-      if (a < 0.03) continue;
-      const px = s.x * W, py = s.y * H;
-      ctx.globalAlpha = a;
-      const g = ctx.createRadialGradient(px, py, 0, px, py, s.r * 2);
-      g.addColorStop(0, 'rgba(255,255,255,1)');
-      g.addColorStop(0.2, 'rgba(200,220,255,0.8)');
-      g.addColorStop(1, 'rgba(200,220,255,0)');
-      ctx.fillStyle = g;
-      
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.beginPath();
-      ctx.arc(px, py, s.r * 2, 0, 6.28);
+      const px = s.x * W;
+      const py = s.y * H;
+      const pulse = 1 + 0.15 * Math.sin(t * 2 + i);
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(s.rot + t * 0.5 * (i % 2 === 0 ? 1 : -1));
+      ctx.scale(pulse, pulse);
+      ctx.fillStyle = s.col;
+      ctx.shadowColor = s.col;
+      ctx.shadowBlur = 10;
+      drawStarShape(ctx, 0, 0, 5, s.r, s.r * 0.4);
       ctx.fill();
-      
-      if (s.bright > 0.85 && a > 0.45) {
-        ctx.globalAlpha = a * 0.4;
-        const g2 = ctx.createRadialGradient(px, py, 0, px, py, s.r * 6);
-        g2.addColorStop(0, 'rgba(150,180,255,0.8)');
-        g2.addColorStop(1, 'rgba(150,180,255,0)');
-        ctx.fillStyle = g2;
-        ctx.beginPath();
-        ctx.arc(px, py, s.r * 6, 0, 6.28);
-        ctx.fill();
-      }
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.restore();
     }
     ctx.globalAlpha = 1;
   }
 
   // --- CLOUDS ---
-  const cloudCanvas = document.createElement('canvas');
-  function initCloudTexture() {
-    cloudCanvas.width = 512;
-    cloudCanvas.height = 256;
-    const c = cloudCanvas.getContext('2d');
-    
-    // Ethereal atmospheric fog/mist instead of cartoon puffs
-    for(let i = 0; i < 5; i++) {
-      const cx = 256 + (Math.random() - 0.5) * 100;
-      const cy = 128 + (Math.random() - 0.5) * 40;
-      const rx = 180 + Math.random() * 120; // Wide and stretched
-      const ry = 40 + Math.random() * 40;  // Thin vertically
-      
-      c.save();
-      c.translate(cx, cy);
-      c.scale(rx, ry);
-      const g = c.createRadialGradient(0, 0, 0, 0, 0, 1);
-      g.addColorStop(0, 'rgba(140, 150, 190, 0.25)');
-      g.addColorStop(0.4, 'rgba(140, 150, 190, 0.1)');
-      g.addColorStop(1, 'rgba(140, 150, 190, 0)');
-      c.fillStyle = g;
-      c.beginPath();
-      c.arc(0, 0, 1, 0, 6.28);
-      c.fill();
-      c.restore();
-    }
-  }
-  initCloudTexture();
-
   const clouds = [];
   function initClouds() {
     clouds.length = 0;
-    for (let i = 0; i < 10; i++) {
-      const layer = i < 4 ? 0 : i < 7 ? 1 : 2;
-      clouds.push({
-        x: Math.random(),
-        y: 0.15 + Math.random() * 0.55,
-        w: 250 + Math.random() * 300 + layer * 100,
-        h: 80 + Math.random() * 60 + layer * 20,
-        speed: (layer + 1) * 0.003 + Math.random() * 0.002,
-        opacity: 0.05 + layer * 0.03
-      });
-    }
+    clouds.push({ x: 0.15, y: 0.25, scale: 1.5, speed: 0.005 });
+    clouds.push({ x: 0.85, y: 0.2, scale: 1.2, speed: 0.003 });
+    clouds.push({ x: 0.5, y: 0.35, scale: 0.8, speed: 0.002 });
+  }
+
+  function drawCartoonCloud(c) {
+    c.beginPath();
+    c.arc(0, 0, 20, Math.PI * 0.5, Math.PI * 1.5);
+    c.arc(25, -20, 25, Math.PI * 1, Math.PI * 2);
+    c.arc(60, -15, 30, Math.PI * 1.2, Math.PI * 0.1);
+    c.arc(85, 5, 20, Math.PI * 1.5, Math.PI * 0.5);
+    c.moveTo(85, 25);
+    c.lineTo(0, 20);
+    c.closePath();
   }
 
   function drawClouds(t, alpha) {
     if (alpha <= 0) return;
+    ctx.globalAlpha = alpha * 0.9;
     for (let i = 0; i < clouds.length; i++) {
       const c = clouds[i];
       const cx = ((c.x + c.speed * t) % 1.5 - 0.25) * W;
-      ctx.globalAlpha = alpha * c.opacity;
-      ctx.drawImage(cloudCanvas, cx - c.w/2, c.y*H - c.h/2, c.w, c.h);
+      ctx.save();
+      ctx.translate(cx, c.y * H);
+      ctx.scale(c.scale, c.scale);
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetY = 0;
+      
+      const grad = ctx.createLinearGradient(0, -20, 0, 25);
+      grad.addColorStop(0, '#5C9CE6'); // Darker sky blue top
+      grad.addColorStop(1, 'rgba(221, 225, 230, 0.1)'); // Fades into the background
+      ctx.fillStyle = grad;
+      
+      drawCartoonCloud(ctx);
+      ctx.fill();
+      ctx.restore();
     }
     ctx.globalAlpha = 1;
   }
@@ -136,10 +126,10 @@
     if (particles.length > 80) return;
     particles.push({
       x, y,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: (Math.random() - 0.5) * 1.5 - 0.4,
-      life: 1, decay: 0.012 + Math.random() * 0.01,
-      sz: Math.random() * 2.2 + 0.6,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5 - 0.15,
+      life: 1, decay: 0.008 + Math.random() * 0.005,
+      sz: Math.random() * 1.5 + 0.5,
       r, g, b
     });
   }
@@ -198,34 +188,36 @@
     rbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     rbCtx.clearRect(0, 0, W, H);
 
-    // --- 3D Shadow layer (dark offset beneath each band) ---
-    const shadowOff = totalBandWidth * 0.06;
-    rbCtx.globalAlpha = 0.3;
-    for (let b = 0; b < bands; b++) {
-      const bFrac0 = b / bands;
-      const bFrac1 = Math.min((b + 1.02) / bands, 1);
-      rbCtx.fillStyle = '#000';
-      rbCtx.beginPath();
-      for (let s = 0; s <= arcSegs; s++) {
-        const af = s / arcSegs;
-        const angle = startA + sweepA * af;
-        const perspW = perspMin + (1 - perspMin) * af;
-        const r = baseR + totalBandWidth * bFrac1 * perspW;
-        const x = cx + Math.cos(angle) * r + shadowOff;
-        const y = cy + Math.sin(angle) * r + shadowOff;
-        if (s === 0) rbCtx.moveTo(x, y); else rbCtx.lineTo(x, y);
+    // --- 3D Shadow layer (fast fake blur) ---
+    for (let step = 1; step <= 3; step++) {
+      rbCtx.globalAlpha = 0.15 / step;
+      const offY = 8 * step;
+      for (let b = 0; b < bands; b++) {
+        const bFrac0 = b / bands;
+        const bFrac1 = Math.min((b + 1.02) / bands, 1);
+        rbCtx.fillStyle = '#000';
+        rbCtx.beginPath();
+        for (let s = 0; s <= arcSegs; s+=2) {
+          const af = s / arcSegs;
+          const angle = startA + sweepA * af;
+          const perspW = perspMin + (1 - perspMin) * af;
+          const r = baseR + totalBandWidth * bFrac1 * perspW;
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r + offY;
+          if (s === 0) rbCtx.moveTo(x, y); else rbCtx.lineTo(x, y);
+        }
+        for (let s = arcSegs; s >= 0; s-=2) {
+          const af = s / arcSegs;
+          const angle = startA + sweepA * af;
+          const perspW = perspMin + (1 - perspMin) * af;
+          const r = baseR + totalBandWidth * bFrac0 * perspW;
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r + offY;
+          rbCtx.lineTo(x, y);
+        }
+        rbCtx.closePath();
+        rbCtx.fill();
       }
-      for (let s = arcSegs; s >= 0; s--) {
-        const af = s / arcSegs;
-        const angle = startA + sweepA * af;
-        const perspW = perspMin + (1 - perspMin) * af;
-        const r = baseR + totalBandWidth * bFrac0 * perspW;
-        const x = cx + Math.cos(angle) * r + shadowOff;
-        const y = cy + Math.sin(angle) * r + shadowOff;
-        rbCtx.lineTo(x, y);
-      }
-      rbCtx.closePath();
-      rbCtx.fill();
     }
     rbCtx.globalAlpha = 1;
 
@@ -304,16 +296,35 @@
 
     // --- Composite onto main canvas ---
     ctx.drawImage(rainbowBuffer, 0, 0, canvas.width, canvas.height, 0, 0, W, H);
+    
+    // --- Fast Glow Effect ---
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = 0.35;
+    ctx.drawImage(rainbowBuffer, 0, 0, canvas.width, canvas.height, 0, 0, W, H);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1.0;
 
 
+
+    // --- Continuous glitter on rainbow ---
+    if (progress > 0.3 && Math.random() < 0.05) {
+      const randomAngle = startA + Math.random() * sweepA;
+      const bIdx = Math.floor(Math.random() * bands);
+      const bMid = (bIdx + 0.5) / bands;
+      const perspW = perspMin + (1 - perspMin) * ((randomAngle - startA) / Math.PI);
+      const r = baseR + totalBandWidth * bMid * perspW;
+      const px = cx + Math.cos(randomAngle) * r;
+      const py = cy + Math.sin(randomAngle) * r;
+      spawnParticle(px, py, 255, 255, 255);
+    }
 
     // --- Trail particles while animating ---
-    if (progress > 0.05 && progress < 0.95) {
+    if (progress > 0.05 && progress < 0.95 && Math.random() < 0.5) {
       const edgeA = startA + sweepA;
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < 1; p++) {
         const bIdx = Math.floor(Math.random() * bands);
         const bMid = (bIdx + 0.5) / bands;
-        const perspW = perspMin + (1 - perspMin);
+        const perspW = perspMin + (1 - perspMin) * ((edgeA - startA) / Math.PI);
         const r = baseR + totalBandWidth * bMid * perspW;
         const px = cx + Math.cos(edgeA) * r;
         const py = cy + Math.sin(edgeA) * r;
@@ -367,7 +378,7 @@
           spawnParticle(
             xPos + Math.random() * (charWidths[i] - tracking),
             textY + (Math.random() - 0.5) * fontSize,
-            255, 255, 255
+            26, 32, 44
           );
         }
 
@@ -387,11 +398,11 @@
           ctx.shadowColor = `rgba(${col[0]},${col[1]},${col[2]},${1-easeCp})`;
           ctx.shadowBlur = 15 * (1 - easeCp);
         } else {
-          grad.addColorStop(0, '#ffffff');
-          grad.addColorStop(0.7, '#cccccc');
-          grad.addColorStop(1, '#888888');
+          grad.addColorStop(0, '#0f172a');
+          grad.addColorStop(0.7, '#1e3a8a');
+          grad.addColorStop(1, '#3b82f6');
           ctx.fillStyle = grad;
-          ctx.shadowColor = `rgba(255,255,255,${1-easeCp})`;
+          ctx.shadowColor = `rgba(0,0,0,${1-easeCp})`;
           ctx.shadowBlur = 12 * (1 - easeCp);
         }
 
@@ -408,10 +419,10 @@
       const shimW = W * 0.1;
       ctx.globalAlpha = 0.3 * alpha;
       const sh = ctx.createLinearGradient(sweepX - shimW, textY, sweepX + shimW, textY);
-      sh.addColorStop(0, 'rgba(255,255,255,0)');
-      sh.addColorStop(0.5, 'rgba(255,255,255,1)');
-      sh.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.globalCompositeOperation = 'lighter';
+      sh.addColorStop(0, 'rgba(29,29,31,0)');
+      sh.addColorStop(0.5, 'rgba(29,29,31,0.5)');
+      sh.addColorStop(1, 'rgba(29,29,31,0)');
+      ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = sh;
 
       let shimXPos = textCenterX - actualTotalWidth * 0.5;
@@ -434,10 +445,10 @@
       const la = clamp01((alpha - 0.55) * 2.5);
       const lw = actualTotalWidth * 1.1 * la;
       const ug = ctx.createRadialGradient(textCenterX, textY + fontSize * 0.7, 0, textCenterX, textY + fontSize * 0.7, lw * 0.5);
-      ug.addColorStop(0, `rgba(255,255,255,${0.5*la})`);
-      ug.addColorStop(0.2, `rgba(180,200,255,${0.25*la})`);
-      ug.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.globalCompositeOperation = 'lighter';
+      ug.addColorStop(0, `rgba(29,29,31,${0.5*la})`);
+      ug.addColorStop(0.2, `rgba(81,81,84,${0.25*la})`);
+      ug.addColorStop(1, 'rgba(29,29,31,0)');
+      ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = ug;
       ctx.fillRect(textCenterX - lw * 0.5, textY + fontSize * 0.7 - 2, lw, 4);
       ctx.globalCompositeOperation = 'source-over';
@@ -452,10 +463,10 @@
   function drawSky() {
     if (!skyGrad) {
       skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-      skyGrad.addColorStop(0, '#0e0e20');
-      skyGrad.addColorStop(0.4, '#141430');
-      skyGrad.addColorStop(0.85, '#1a1a2e');
-      skyGrad.addColorStop(1, '#1a1a2e');
+      skyGrad.addColorStop(0, '#C8CDD5');
+      skyGrad.addColorStop(0.4, '#D5D9E0');
+      skyGrad.addColorStop(0.85, '#DDE1E6');
+      skyGrad.addColorStop(1, '#DDE1E6');
     }
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
