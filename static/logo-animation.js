@@ -24,14 +24,13 @@
     [220, 30, 38],   // red
   ];
 
-  // --- STARS ---
-  const stars = [];
-  function initStars() {
-    stars.length = 0;
-    stars.push({ x: 0.35, y: 0.45, r: 10, rot: 0.2, col: '#ff2d55' });
-    stars.push({ x: 0.65, y: 0.40, r: 8, rot: -0.3, col: '#0a84ff' });
-    stars.push({ x: 0.70, y: 0.65, r: 12, rot: 0.5, col: '#ffcc00' });
-    stars.push({ x: 0.30, y: 0.70, r: 9, rot: -0.1, col: '#30d158' });
+  // --- CLOUDS AND STARS ---
+  const movingClouds = [];
+  function initClouds() {
+    movingClouds.length = 0;
+    // Add two moving clouds like earlier
+    movingClouds.push({ x: 0.15, y: 0.25, scale: 1.2, speed: 0.005 });
+    movingClouds.push({ x: 0.85, y: 0.2, scale: 0.9, speed: 0.003 });
   }
 
   function drawStarShape(c, x, y, spikes, outerR, innerR) {
@@ -53,76 +52,94 @@
     c.closePath();
   }
 
-  function drawStars(t, alpha) {
-    if (alpha <= 0) return;
-    ctx.globalAlpha = alpha;
-    for (let i = 0; i < stars.length; i++) {
-      const s = stars[i];
-      const px = s.x * W;
-      const py = s.y * H;
-      const pulse = 1 + 0.15 * Math.sin(t * 2 + i);
-      ctx.save();
-      ctx.translate(px, py);
-      ctx.rotate(s.rot + t * 0.5 * (i % 2 === 0 ? 1 : -1));
-      ctx.scale(pulse, pulse);
-      ctx.fillStyle = s.col;
-      ctx.shadowColor = s.col;
-      ctx.shadowBlur = 10;
-      drawStarShape(ctx, 0, 0, 5, s.r, s.r * 0.4);
-      ctx.fill();
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  // --- CLOUDS ---
-  const clouds = [];
-  function initClouds() {
-    clouds.length = 0;
-    clouds.push({ x: 0.15, y: 0.25, scale: 1.5, speed: 0.005 });
-    clouds.push({ x: 0.85, y: 0.2, scale: 1.2, speed: 0.003 });
-    clouds.push({ x: 0.5, y: 0.35, scale: 0.8, speed: 0.002 });
-  }
-
-  function drawCartoonCloud(c) {
+  function drawCloudShape(c) {
     c.beginPath();
-    c.arc(0, 0, 20, Math.PI * 0.5, Math.PI * 1.5);
-    c.arc(25, -20, 25, Math.PI * 1, Math.PI * 2);
-    c.arc(60, -15, 30, Math.PI * 1.2, Math.PI * 0.1);
-    c.arc(85, 5, 20, Math.PI * 1.5, Math.PI * 0.5);
-    c.moveTo(85, 25);
-    c.lineTo(0, 20);
+    c.moveTo(-90, 30);
+    c.lineTo(120, 30);
+    c.arc(120, 10, 20, Math.PI/2, -Math.PI/2, true);
+    c.arc(80, -15, 30, 0, -Math.PI, true);
+    c.arc(20, -35, 35, 0, -Math.PI, true);
+    c.arc(-40, -20, 30, 0, -Math.PI, true);
+    c.arc(-90, 10, 20, -Math.PI/2, Math.PI/2, true);
     c.closePath();
   }
 
-  function drawClouds(t, alpha) {
+  function drawStaticCloudAndStars(t, alpha) {
     if (alpha <= 0) return;
-    ctx.globalAlpha = alpha * 0.9;
-    for (let i = 0; i < clouds.length; i++) {
-      const c = clouds[i];
+    const isMobile = W < 768;
+    const scale = isMobile ? 0.6 : 1.2;
+    
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Moving clouds
+    for (let i = 0; i < movingClouds.length; i++) {
+      const c = movingClouds[i];
       const cx = ((c.x + c.speed * t) % 1.5 - 0.25) * W;
-      
-      const isMobile = W < 768;
-      const mScale = isMobile ? c.scale * 0.5 : c.scale;
+      const mScale = isMobile ? c.scale * 0.4 : c.scale * 0.8;
       const mY = isMobile ? c.y * H + (i * 20) : c.y * H;
       
       ctx.save();
       ctx.translate(cx, mY);
       ctx.scale(mScale, mScale);
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
-      ctx.shadowBlur = 20;
-      ctx.shadowOffsetY = 0;
-      
-      const grad = ctx.createLinearGradient(0, -20, 0, 25);
-      grad.addColorStop(0, '#5C9CE6'); // Darker sky blue top
-      grad.addColorStop(1, 'rgba(221, 225, 230, 0.1)'); // Fades into the background
-      ctx.fillStyle = grad;
-      
-      drawCartoonCloud(ctx);
+      drawCloudShape(ctx);
+      ctx.fillStyle = '#6fa8dc';
+      ctx.globalAlpha = alpha * 0.7; // slightly transparent background clouds
       ctx.fill();
+      ctx.strokeStyle = '#2986cc';
+      ctx.lineWidth = 3;
+      ctx.stroke();
       ctx.restore();
     }
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = alpha;
+    
+    // Central Static Cloud
+    const cx = W * 0.5;
+    const cy = H * 0.45; // Shifted slightly down for better spacing
+
+    // Slow and calm movement (gentle float + slight scale)
+    const pulse = 1 + 0.02 * Math.sin(t * 1.5); 
+    const floatY = Math.sin(t * 2) * 5; 
+
+    ctx.save();
+    ctx.translate(cx, cy + floatY);
+    ctx.scale(pulse * scale, pulse * scale);
+
+    drawCloudShape(ctx);
+    ctx.fillStyle = '#6fa8dc';
+    ctx.fill();
+    ctx.strokeStyle = '#2986cc';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+
+    // Stars
+    const starData = [
+      { dx: 10, dy: 90, r: 16, col: '#ff0000' },
+      { dx: 60, dy: 50, r: 16, col: '#ffff00' },
+      { dx: 100, dy: 95, r: 16, col: '#00ff00' },
+      { dx: 150, dy: 60, r: 16, col: '#0000ff' }
+    ];
+
+    for (let i = 0; i < starData.length; i++) {
+        const s = starData[i];
+        const sx = cx + s.dx * scale;
+        const sy = cy + floatY + s.dy * scale; // move stars with the cloud float
+        
+        ctx.save();
+        ctx.translate(sx, sy);
+        const starPulse = 1 + 0.05 * Math.sin(t * 2 + i);
+        ctx.scale(starPulse, starPulse);
+        ctx.fillStyle = s.col;
+        drawStarShape(ctx, 0, 0, 5, s.r * scale, s.r * 0.4 * scale);
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1.5 * scale;
+        ctx.stroke();
+        ctx.restore();
+    }
+    
+    ctx.restore();
   }
 
   // --- PARTICLES ---
@@ -162,22 +179,16 @@
 
     const isMobile = W < 768;
     
-    // Ensure the rainbow diameter doesn't exceed screen width
-    const maxRadius = W * 0.48;
-    let baseR = Math.min(W, H) * 0.38;
-    let totalBandWidth = Math.min(W, H) * 0.18;
-    
-    if (baseR + totalBandWidth > maxRadius) {
-      const scale = maxRadius / (baseR + totalBandWidth);
-      baseR *= scale;
-      totalBandWidth *= scale;
-    }
+    // Ensure the rainbow diameter doesn't exceed screen width or top height
+    const maxRadius = Math.min(W * 0.48, H * 0.62); // Increased max bounds
+    let baseR = maxRadius * 0.68;
+    let totalBandWidth = maxRadius * 0.32;
 
     const perspMin = 0.3; // Left small, right big — preserved
     // Shift the arc's geometrical center slightly LEFT to perfectly center its physical bounding box on the screen
     const rainbowCenterOffset = (totalBandWidth * (1.0 - perspMin)) * 0.5;
     const cx = W * 0.5 - rainbowCenterOffset;
-    const cy = H * 0.56; // Reverted to 0.56
+    const cy = H * 0.66; // Moved center down to allow a bigger arc
 
     const startA = Math.PI;
     const sweepA = Math.PI * Math.min(progress, 1);
@@ -345,122 +356,103 @@
     if (alpha <= 0.01) return;
 
     const isMobile = W < 768;
-    const fontSize = isMobile ? Math.max(W * 0.055, 16) : Math.max(Math.min(W * 0.055, 64), 22);
+    const rSize = isMobile ? Math.max(W * 0.10, 32) : Math.max(Math.min(W * 0.075, 100), 48); // Reduced text size
+    const eSize = rSize * 0.45;
 
-    const cy = H * 0.56;
-    const textY = H * 0.63; // Reverted to 0.63
-    const text = 'Rainbow Entertainment';
+    const textY_R = H * 0.66; // Positioned lower to match new rainbow cy
+    const textY_E = textY_R + rSize * 0.8;
 
     ctx.save();
     ctx.textBaseline = 'middle';
-    ctx.font = `400 ${fontSize}px 'Inter', 'Helvetica Neue', sans-serif`;
-
-    const charWidths = [];
-    let actualTotalWidth = 0;
-    const tracking = fontSize * 0.12;
-
-    for (let i = 0; i < text.length; i++) {
-      const isSpace = text[i] === ' ';
-      // Hardcode space width to prevent overlapping bugs on some devices
-      const cw = isSpace ? fontSize * 0.4 : ctx.measureText(text[i]).width + tracking;
-      charWidths.push(cw);
-      actualTotalWidth += cw;
-    }
-    actualTotalWidth -= tracking;
-
     ctx.textAlign = 'left';
 
-    // Perfectly center the text on the screen, matching the rainbow's centered bounding box
-    const textCenterX = W * 0.5;
+    const word1 = 'Rainbow';
+    const word2 = 'Entertainment';
 
-    let xPos = textCenterX - actualTotalWidth * 0.5;
-    for (let i = 0; i < text.length; i++) {
-      const isRainbow = i < 7;
+    // Measure Rainbow
+    ctx.font = `bold ${rSize}px 'Georgia', 'Times New Roman', serif`;
+    let rWidths = [];
+    let totalRWidth = 0;
+    const rTracking = rSize * 0.05;
+    for (let i = 0; i < word1.length; i++) {
+      const cw = ctx.measureText(word1[i]).width + rTracking;
+      rWidths.push(cw);
+      totalRWidth += cw;
+    }
+    totalRWidth -= rTracking;
+
+    // Measure Entertainment
+    ctx.font = `bold ${eSize}px 'Georgia', 'Times New Roman', serif`;
+    let eWidths = [];
+    let totalEWidth = 0;
+    const eTracking = eSize * 0.05;
+    for (let i = 0; i < word2.length; i++) {
+      const cw = ctx.measureText(word2[i]).width + eTracking;
+      eWidths.push(cw);
+      totalEWidth += cw;
+    }
+    totalEWidth -= eTracking;
+
+    // Calculate rainbow right bound
+    const maxRadius = Math.min(W * 0.48, H * 0.62);
+    let baseR = maxRadius * 0.68;
+    let totalBandWidth = maxRadius * 0.32;
+    const perspMin = 0.3;
+    const rainbowCenterOffset = (totalBandWidth * (1.0 - perspMin)) * 0.5;
+    const rainbowCx = W * 0.5 - rainbowCenterOffset;
+
+    // Inner left edge
+    const rainbowInnerLeftEdge = rainbowCx - baseR;
+    // Inner right edge
+    const rainbowInnerRightEdge = rainbowCx + baseR;
+
+    // 'Rainbow' starts at the inner left edge (inside the rainbow)
+    const startX_R = rainbowInnerLeftEdge + (W * 0.02);
+    
+    // 'Entertainment' ends at the inner right edge
+    let alignX_E = rainbowInnerRightEdge - (W * 0.02);
+
+    // Draw Rainbow
+    let xPos = startX_R;
+    ctx.font = `bold ${rSize}px 'Georgia', 'Times New Roman', serif`;
+    for (let i = 0; i < word1.length; i++) {
       const cp = clamp01((alpha * 1.8) - (i * 0.04));
       if (cp > 0.01) {
         const easeCp = 1 - Math.pow(1 - cp, 4);
-
-        if (cp > 0.1 && cp < 0.9 && Math.random() < 0.12) {
-          spawnParticle(
-            xPos + Math.random() * (charWidths[i] - tracking),
-            textY + (Math.random() - 0.5) * fontSize,
-            26, 32, 44
-          );
-        }
-
         ctx.globalAlpha = easeCp;
         ctx.save();
-        ctx.translate(xPos + (charWidths[i] - tracking) * 0.5, textY);
+        ctx.translate(xPos + (rWidths[i] - rTracking) * 0.5, textY_R);
         const scale = 0.94 + 0.06 * easeCp;
         ctx.scale(scale, scale);
 
-        const grad = ctx.createLinearGradient(0, -fontSize * 0.5, 0, fontSize * 0.5);
-        if (isRainbow) {
-          const col = SPECTRUM[6 - i];
-          grad.addColorStop(0, `rgb(${Math.min(255,col[0]+100)},${Math.min(255,col[1]+100)},${Math.min(255,col[2]+100)})`);
-          grad.addColorStop(0.5, `rgb(${col[0]},${col[1]},${col[2]})`);
-          grad.addColorStop(1, `rgb(${Math.max(0,col[0]-60)},${Math.max(0,col[1]-60)},${Math.max(0,col[2]-60)})`);
-          ctx.fillStyle = grad;
-          ctx.shadowColor = `rgba(${col[0]},${col[1]},${col[2]},${1-easeCp})`;
-          ctx.shadowBlur = 15 * (1 - easeCp);
-        } else {
-          grad.addColorStop(0, '#0f172a');
-          grad.addColorStop(0.7, '#1e3a8a');
-          grad.addColorStop(1, '#3b82f6');
-          ctx.fillStyle = grad;
-          ctx.shadowColor = `rgba(0,0,0,${1-easeCp})`;
-          ctx.shadowBlur = 12 * (1 - easeCp);
-        }
-
-        ctx.fillText(text[i], -(charWidths[i] - tracking) * 0.5, 0);
+        const col = SPECTRUM[6 - i];
+        ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`;
+        ctx.fillText(word1[i], -(rWidths[i] - rTracking) * 0.5, 0);
         ctx.restore();
       }
-      xPos += charWidths[i];
+      xPos += rWidths[i];
     }
 
-    // Shimmer
-    if (alpha > 0.5) {
-      const sweepPhase = (t * 0.35) % 1;
-      const sweepX = W * (-0.1 + sweepPhase * 1.2);
-      const shimW = W * 0.1;
-      ctx.globalAlpha = 0.3 * alpha;
-      const sh = ctx.createLinearGradient(sweepX - shimW, textY, sweepX + shimW, textY);
-      sh.addColorStop(0, 'rgba(29,29,31,0)');
-      sh.addColorStop(0.5, 'rgba(29,29,31,0.5)');
-      sh.addColorStop(1, 'rgba(29,29,31,0)');
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = sh;
-
-      let shimXPos = textCenterX - actualTotalWidth * 0.5;
-      for (let i = 0; i < text.length; i++) {
-        const cp = clamp01((alpha * 1.8) - (i * 0.04));
+    // Draw Entertainment
+    let xPosE = alignX_E - totalEWidth;
+    ctx.font = `bold ${eSize}px 'Georgia', 'Times New Roman', serif`;
+    for (let i = 0; i < word2.length; i++) {
+      const cp = clamp01((alpha * 1.8) - ((word1.length + i) * 0.02));
+      if (cp > 0.01) {
         const easeCp = 1 - Math.pow(1 - cp, 4);
+        ctx.globalAlpha = easeCp;
         ctx.save();
-        ctx.translate(shimXPos + (charWidths[i] - tracking) * 0.5, textY);
+        ctx.translate(xPosE + (eWidths[i] - eTracking) * 0.5, textY_E);
         const scale = 0.94 + 0.06 * easeCp;
         ctx.scale(scale, scale);
-        ctx.fillText(text[i], -(charWidths[i] - tracking) * 0.5, 0);
+
+        ctx.fillStyle = '#4a86e8'; // Match blue in image
+        ctx.fillText(word2[i], -(eWidths[i] - eTracking) * 0.5, 0);
         ctx.restore();
-        shimXPos += charWidths[i];
       }
-      ctx.globalCompositeOperation = 'source-over';
+      xPosE += eWidths[i];
     }
 
-    // Cinematic light flare underline
-    if (alpha > 0.55) {
-      const la = clamp01((alpha - 0.55) * 2.5);
-      const lw = actualTotalWidth * 1.1 * la;
-      const ug = ctx.createRadialGradient(textCenterX, textY + fontSize * 0.7, 0, textCenterX, textY + fontSize * 0.7, lw * 0.5);
-      ug.addColorStop(0, `rgba(29,29,31,${0.5*la})`);
-      ug.addColorStop(0.2, `rgba(81,81,84,${0.25*la})`);
-      ug.addColorStop(1, 'rgba(29,29,31,0)');
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = ug;
-      ctx.fillRect(textCenterX - lw * 0.5, textY + fontSize * 0.7 - 2, lw, 4);
-      ctx.globalCompositeOperation = 'source-over';
-    }
-
-    ctx.globalAlpha = 1;
     ctx.restore();
   }
 
@@ -496,7 +488,6 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     skyGrad = null;
     rainbowBuffer = null;
-    initStars();
     initClouds();
   }
 
@@ -511,8 +502,7 @@
     const rainbowP = easeInOutQuad(clamp01((t - T.rainbowStart) / (T.rainbowEnd - T.rainbowStart)));
     const textA = easeOutCubic(clamp01((t - T.textIn) / 1.8));
 
-    drawStars(t, starsA);
-    drawClouds(t, cloudsA);
+    drawStaticCloudAndStars(t, cloudsA);
     drawRainbow(rainbowP, t);
     drawParticles();
     drawText(textA, t);
