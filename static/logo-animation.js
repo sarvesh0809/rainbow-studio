@@ -93,9 +93,9 @@
     }
     ctx.globalAlpha = alpha;
     
-    // Central Static Cloud
-    const cx = W * 0.5;
-    const cy = H * 0.45; // Shifted slightly down for better spacing
+    // Central Static Cloud (shifted a bit to the left side)
+    const cx = W * 0.47;
+    const cy = H * 0.40; // Shifted slightly up for better spacing
 
     // Slow and calm movement (gentle float + slight scale)
     const pulse = 1 + 0.02 * Math.sin(t * 1.5); 
@@ -205,37 +205,7 @@
     rbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     rbCtx.clearRect(0, 0, W, H);
 
-    // --- 3D Shadow layer (fast fake blur) ---
-    for (let step = 1; step <= 3; step++) {
-      rbCtx.globalAlpha = 0.15 / step;
-      const offY = 8 * step;
-      for (let b = 0; b < bands; b++) {
-        const bFrac0 = b / bands;
-        const bFrac1 = Math.min((b + 1.02) / bands, 1);
-        rbCtx.fillStyle = '#000';
-        rbCtx.beginPath();
-        for (let s = 0; s <= arcSegs; s+=2) {
-          const af = s / arcSegs;
-          const angle = startA + sweepA * af;
-          const perspW = perspMin + (1 - perspMin) * af;
-          const r = baseR + totalBandWidth * bFrac1 * perspW;
-          const x = cx + Math.cos(angle) * r;
-          const y = cy + Math.sin(angle) * r + offY;
-          if (s === 0) rbCtx.moveTo(x, y); else rbCtx.lineTo(x, y);
-        }
-        for (let s = arcSegs; s >= 0; s-=2) {
-          const af = s / arcSegs;
-          const angle = startA + sweepA * af;
-          const perspW = perspMin + (1 - perspMin) * af;
-          const r = baseR + totalBandWidth * bFrac0 * perspW;
-          const x = cx + Math.cos(angle) * r;
-          const y = cy + Math.sin(angle) * r + offY;
-          rbCtx.lineTo(x, y);
-        }
-        rbCtx.closePath();
-        rbCtx.fill();
-      }
-    }
+    // --- 3D Shadow layer removed ---
     rbCtx.globalAlpha = 1;
 
     // --- Main color bands (natural, darker) ---
@@ -356,11 +326,8 @@
     if (alpha <= 0.01) return;
 
     const isMobile = W < 768;
-    const rSize = isMobile ? Math.max(W * 0.10, 32) : Math.max(Math.min(W * 0.075, 100), 48); // Reduced text size
-    const eSize = rSize * 0.45;
-
-    const textY_R = H * 0.66; // Positioned lower to match new rainbow cy
-    const textY_E = textY_R + rSize * 0.8;
+    const rSize = isMobile ? Math.max(W * 0.085, 28) : Math.max(Math.min(W * 0.065, 85), 40); // Reduced size of "Rainbow"
+    const textY_R = H * 0.62; // Shifted slightly up
 
     ctx.save();
     ctx.textBaseline = 'middle';
@@ -381,18 +348,6 @@
     }
     totalRWidth -= rTracking;
 
-    // Measure Entertainment
-    ctx.font = `bold ${eSize}px 'Georgia', 'Times New Roman', serif`;
-    let eWidths = [];
-    let totalEWidth = 0;
-    const eTracking = eSize * 0.05;
-    for (let i = 0; i < word2.length; i++) {
-      const cw = ctx.measureText(word2[i]).width + eTracking;
-      eWidths.push(cw);
-      totalEWidth += cw;
-    }
-    totalEWidth -= eTracking;
-
     // Calculate rainbow right bound
     const maxRadius = Math.min(W * 0.48, H * 0.62);
     let baseR = maxRadius * 0.68;
@@ -411,6 +366,36 @@
     
     // 'Entertainment' ends at the inner right edge
     let alignX_E = rainbowInnerRightEdge - (W * 0.02);
+
+    // X-position of the start of 'i' in 'Rainbow' (third letter, index 2)
+    const x_i = startX_R + rWidths[0] + rWidths[1];
+
+    // Measure Entertainment at a base size of 100px to compute the required font size dynamically
+    ctx.font = `bold 100px 'Georgia', 'Times New Roman', serif`;
+    let totalEWidthAt100 = 0;
+    const eTrackingAt100 = 100 * 0.05;
+    for (let i = 0; i < word2.length; i++) {
+      totalEWidthAt100 += ctx.measureText(word2[i]).width + eTrackingAt100;
+    }
+    totalEWidthAt100 -= eTrackingAt100;
+
+    // Calculate required eSize to fit exactly between x_i and alignX_E
+    const targetEWidth = alignX_E - x_i;
+    const eSize = (targetEWidth / totalEWidthAt100) * 100;
+
+    // Measure Entertainment again with the calculated dynamic eSize
+    ctx.font = `bold ${eSize}px 'Georgia', 'Times New Roman', serif`;
+    let eWidths = [];
+    let totalEWidth = 0;
+    const eTracking = eSize * 0.05;
+    for (let i = 0; i < word2.length; i++) {
+      const cw = ctx.measureText(word2[i]).width + eTracking;
+      eWidths.push(cw);
+      totalEWidth += cw;
+    }
+    totalEWidth -= eTracking;
+
+    const textY_E = textY_R + rSize * 0.5 + eSize * 0.5 + 8;
 
     // Draw Rainbow
     let xPos = startX_R;
