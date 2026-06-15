@@ -115,10 +115,10 @@
 
     // Stars
     const starData = [
-      { dx: 10, dy: 90, r: 16, col: '#ff0000' },
-      { dx: 60, dy: 50, r: 16, col: '#ffff00' },
-      { dx: 100, dy: 95, r: 16, col: '#00ff00' },
-      { dx: 150, dy: 60, r: 16, col: '#0000ff' }
+      { dx: 10, dy: 90, r: 10, col: '#ff0000' },
+      { dx: 60, dy: 50, r: 10, col: '#ffff00' },
+      { dx: 100, dy: 95, r: 10, col: '#00ff00' },
+      { dx: 150, dy: 60, r: 10, col: '#0000ff' }
     ];
 
     for (let i = 0; i < starData.length; i++) {
