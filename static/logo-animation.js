@@ -72,12 +72,21 @@
     ctx.save();
     ctx.globalAlpha = alpha;
 
+    // Compute rainbow geometry to position clouds/stars inside the arc
+    const maxRadius = Math.min(W * 0.48, H * 0.62);
+    const baseR = maxRadius * 0.68;
+    const rainbowCy = H * 0.66;
+    // The top of the inner arc is at rainbowCy - baseR
+    // Place the cloud comfortably inside (60% down from top of arc to center)
+    const arcTopY = rainbowCy - baseR;
+    const cloudCy = isMobile ? arcTopY + baseR * 0.35 : H * 0.40;
+
     // Moving clouds
     for (let i = 0; i < movingClouds.length; i++) {
       const c = movingClouds[i];
       const cx = ((c.x + c.speed * t) % 1.5 - 0.25) * W;
       const mScale = isMobile ? c.scale * 0.4 : c.scale * 0.8;
-      const mY = isMobile ? c.y * H + (i * 20) : c.y * H;
+      const mY = isMobile ? arcTopY - 10 + (i * 30) : c.y * H;
       
       ctx.save();
       ctx.translate(cx, mY);
@@ -93,9 +102,9 @@
     }
     ctx.globalAlpha = alpha;
     
-    // Central Static Cloud (shifted a bit to the left side)
+    // Central Static Cloud (positioned inside the rainbow arc)
     const cx = W * 0.47;
-    const cy = H * 0.40; // Shifted slightly up for better spacing
+    const cy = cloudCy;
 
     // Slow and calm movement (gentle float + slight scale)
     const pulse = 1 + 0.02 * Math.sin(t * 1.5); 
@@ -327,7 +336,7 @@
 
     const isMobile = W < 768;
     const rSize = isMobile ? Math.max(W * 0.085, 28) : Math.max(Math.min(W * 0.065, 85), 40); // Reduced size of "Rainbow"
-    const textY_R = H * 0.62; // Shifted slightly up
+    const textY_R = isMobile ? H * 0.72 : H * 0.62;
 
     ctx.save();
     ctx.textBaseline = 'middle';
