@@ -691,7 +691,7 @@ img, video { display: block; max-width: 100%; }
 
 .footer-cta {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 10vw, 10rem);
+  font-size: clamp(2.5rem, 6.5vw, 6.5rem);
   font-weight: 700;
   text-transform: uppercase;
   line-height: 0.95;
