@@ -67,7 +67,7 @@
   function drawStaticCloudAndStars(t, alpha) {
     if (alpha <= 0) return;
     const isMobile = W < 768;
-    const scale = isMobile ? 0.6 : 1.2;
+    const scale = isMobile ? 0.42 : 1.2;
     
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -336,7 +336,7 @@
 
     const isMobile = W < 768;
     const rSize = isMobile ? Math.max(W * 0.085, 28) : Math.max(Math.min(W * 0.065, 85), 40); // Reduced size of "Rainbow"
-    const textY_R = isMobile ? H * 0.72 : H * 0.62;
+    const textY_R = isMobile ? H * 0.64 : H * 0.62;
 
     ctx.save();
     ctx.textBaseline = 'middle';
