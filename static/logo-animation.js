@@ -455,10 +455,10 @@
   function drawSky() {
     if (!skyGrad) {
       skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-      skyGrad.addColorStop(0, '#C8CDD5');
-      skyGrad.addColorStop(0.4, '#D5D9E0');
-      skyGrad.addColorStop(0.85, '#DDE1E6');
-      skyGrad.addColorStop(1, '#DDE1E6');
+      skyGrad.addColorStop(0, '#000000');
+      skyGrad.addColorStop(0.4, '#000000');
+      skyGrad.addColorStop(0.85, '#000000');
+      skyGrad.addColorStop(1, '#000000');
     }
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, W, H);
